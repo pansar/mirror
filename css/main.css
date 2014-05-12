@@ -219,3 +219,9 @@ body, html {
   font-weight:  200;
 }
 
+ .stars {
+        z-index: 0; position: absolute; /* width: 420em; height: 70em; */
+
+        transform:translate3D(0em, 0em, 0); animation: stars 21s ease; transform-style: preserve-3d;
+}
+

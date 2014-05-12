@@ -45,6 +45,9 @@ jQuery(document).ready(function($) {
 
 	var lastCompliment;
 	var compliment;
+	
+	var shootingStarObj = new ShootingStar( "body" );
+        shootingStarObj.launch(10);
 
     // multi-langugage support according to browser-lang
     var lang = window.navigator.language;
@@ -133,7 +136,7 @@ jQuery(document).ready(function($) {
         	eventList = [];
 
         	for (var i in events) {
-			console.log(events[i]);
+			//console.log(events[i]);
         		var e = events[i];
         		
 			if(e.RRULE != '')
@@ -146,14 +149,38 @@ jQuery(document).ready(function($) {
 						var subKey = key.substring(seperator+1);
 
 						var dt;
-						if (subKey == 'VALUE=DATE') {
-							//date
-							dt = new Date(value.substring(0,4), value.substring(4,6) - 1, value.substring(6,8));
-						} else {
-							//time
-							dt = new Date(value.substring(0,4), value.substring(4,6) - 1, value.substring(6,8), value.substring(9,11), value.substring(11,13), value.substring(13,15));
+						var dt2 = new Date();
+						if (e.RRULE.substring(5,11) === 'YEARLY'){
+						
+				          		if (subKey == 'VALUE=DATE') {
+					     			//date
+								dt = new Date(dt2.getFullYear(), value.substring(4,6) - 1, value.substring(6,8));
+							} else {
+								//time
+								dt = new Date(dt2.getFullYear(), value.substring(4,6) - 1, value.substring(6,8), value.substring(9,11), value.substring(11,13), value.substring(13,15));
+							}
 						}
-
+						else if(e.RRULE.substring(5,11) === 'MONTHL'){
+							//console.log(events[i]);
+						       if (subKey == 'VALUE=DATE') {
+                                                                //date
+                                                                dt = new Date(dt2.getFullYear(), dt2.getMonth(), value.substring(6,8));
+                                                        } else {
+                                                                //time
+                                                                dt = new Date(dt2.getFullYear(), dt2.getMonth(), value.substring(6,8), value.substring(9,11), value.substring(11,13), value.substring(13,15));
+                                                        }
+                                                }
+						else{
+							                                                
+                                                        if (subKey == 'VALUE=DATE') {
+                                                                //date
+                                                                dt = new Date(value.substring(0,4), value.substring(4,6) - 1, value.substring(6,8));
+                                                        } else {
+                                                                //time
+                                                                dt = new Date(value.substring(0,4), value.substring(4,6) - 1, value.substring(6,8), value.substring(9,11), value.substring(11,13), value.substring(13,15));
+                                                        }
+                                                
+						}
 						if (mainKey == 'DTSTART') e.start_date = dt; 
 						if (mainKey == 'DTEND') e.endDate = dt; 
 					}
@@ -162,13 +189,14 @@ jQuery(document).ready(function($) {
 
         		var now = new Date();
         		var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        		var days = moment(e.start_date).diff(moment(today), 'days');
-console.log(moment(e.start_date).format('L'));
-console.log(moment(e.startDate).format('L'));
-console.log(moment(today).format('L'));
+        		var days = moment(e.start_date).diff(moment(today).format('L'), 'days');
+			//console.log(e.RRULE);
+			//console.log(moment(e.start_date).format('L'));
+			//console.log(moment(today).format('L'));
 
         		//only add fututre events
-        		if (days >= 0) {
+        		if (days >= 0 && days != -0) {
+				//console.log(days);
 	        		eventList.push({'description':e.SUMMARY,'days':days});
         		}
         	};

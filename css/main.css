@@ -148,7 +148,7 @@ body, html {
 	font-size: 20px;
 	line-height: 20px;
 }
-.forecast-table .day, .forecast-table .temp-min, .forecast-table .temp-max  
+.forecast-table .day, .forecast-table .temp-min, .forecast-table .temp-max, .forecast-table .downpour 
 {
 	width: 50px;
 	text-align: right;

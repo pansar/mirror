@@ -69,12 +69,12 @@ jQuery(document).ready(function($) {
             break;
         default:
             var days = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
-            var months = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','Aeptember','Oktober','November','December'];
+            var months = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
             var dayAbbr = ['Sön','Mån','Tis','Ons','Tor','Fre','Lör'];
             var tomorrow = 'Imorgon';
             var in_days = 'dagar';
     }
-
+/*
 	//connect do Xbee monitor
 	var socket = io.connect('http://rpi-development.local:8080');
 	socket.on('dishwasher', function (dishwasherReady) {
@@ -86,7 +86,7 @@ jQuery(document).ready(function($) {
 			$('.lower-third').fadeIn(2000);		
 		}
 	});
-
+*/
 
 	var weatherParams = {
 		'q':'Fjälkinge, Sweden',
@@ -105,7 +105,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 		setTimeout(function() {
-			checkVersion();
+		//	checkVersion();
 		}, 3000);
 	})();
 
@@ -139,7 +139,7 @@ jQuery(document).ready(function($) {
 			//console.log(events[i]);
         		var e = events[i];
         		
-			if(e.RRULE != '')
+			if(e.hasOwnProperty('RRULE'))//e.RRULE != '')
 			{
 			   for (var key in e) {
         			var value = e[key];
@@ -242,16 +242,16 @@ jQuery(document).ready(function($) {
 	{
 
 		var compliments = [
-			'Hey, handsome!',
-			'Hi, sexy!',
-			'Hello, beauty!',
-			'You look sexy!',
-			'Fia är en fis!',
-			'Sötnos!',
-			'Wow, you look hot!',
-			'Looking good today!',
-			'You look nice!',
-			'Enjoy your day!'
+                        'Hi, sexy!',
+                        'Hello, beauty!',
+                        'May the force be with you',
+                        'Bästa familjen',
+                        'Fia är en fis!',
+                        'Sötnos!',
+                        'Wow, you look hot!',
+                        'Looking good today!',
+                        'You look nice!',
+                        'Enjoy your day!'
 		];
 
 		while (compliment == lastCompliment) {
@@ -326,15 +326,60 @@ jQuery(document).ready(function($) {
 	})();
 
 	(function updateWeatherForecast()
-	{
-			$.getJSON('http://api.openweathermap.org/data/2.5/forecast', weatherParams, function(json, textStatus) {
+	{		/*
+		 	var result;
+			var downpour = new XMLHttpRequest();
+			var  parseXML = function(xmlStr) {
+                                return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+                        };		
 
+			downpour.onload = function(){
+				result = parseXML(this.responseText);
+				var hej = xml2json(result);
+		//	console.log(hej);
+			}
+			downpour.open('GET', 'downpour.php', true);
+
+			downpour.send();
+*/
+			
+
+			//var test  = parseXml(result);
+
+			//console.log(test);		
+
+			$.getJSON('http://api.openweathermap.org/data/2.5/forecast', weatherParams, function(json, textStatus) {
 			var forecastData = {};
 
-			for (var i in json.list) {
-				var forecast = json.list[i];
-				var dateKey  = forecast.dt_txt.substring(0, 10);
+/*_______________________________
+                       var result;
+			var hej;
 
+                        var downpour = new XMLHttpRequest();
+                        var  parseXML = function(xmlStr) {
+                                return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+                        };
+
+                        downpour.onload = function(){
+                               var result = parseXML(this.responseText);
+                               hej = xml2json(result);
+			 for (var i in hej.responseData){ 
+                        console.log(i);
+		                   }
+	
+                     console.log(hej.result);
+                        }
+                        downpour.open('GET', 'downpour.php', true);
+                        downpour.send();
+/*---------------------------------------------------------*/
+			for (var i in json.list) {
+
+				var forecast = json.list[i];
+			//	var hmm = hej.list[i];
+				var dateKey  = forecast.dt_txt.substring(0, 10);
+//console.log(forecast.dt_txt.substring(0, 10));
+//console.log(forecast);
+//console.log(hej.child[i]);
 				if (forecastData[dateKey] == undefined) {
 					forecastData[dateKey] = {
 						'timestamp':forecast.dt * 1000,
@@ -359,6 +404,7 @@ jQuery(document).ready(function($) {
 				row.append($('<td/>').addClass('day').html(dayAbbr[dt.getDay()]));
 				row.append($('<td/>').addClass('temp-max').html(roundVal(forecast.temp_max)));
 				row.append($('<td/>').addClass('temp-min').html(roundVal(forecast.temp_min)));
+				row.append($('<td/>').addClass('downpour').html(Math.floor((Math.random() * 10))));
 
 				forecastTable.append(row);
 				opacity -= 0.155;
